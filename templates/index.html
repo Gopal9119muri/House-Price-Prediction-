@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>House Price Prediction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+     <style>
+        /* General Reset */
+        body, h1, p, form, input {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('https://media.licdn.com/dms/image/D4D12AQF7aWCrSGv5_w/article-cover_image-shrink_720_1280/0/1708328033213?e=2147483647&v=beta&t=7tGBbmwb88d1DyBDQ4Du5Pn7CL3DFlFzM0aGpYzvZts') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        /* Parallax Background Effect */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            filter: blur(3px) brightness(0.6);
+            z-index: -1;
+        }
+
+        /* Page Container */
+        .register_page {
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width:800px; /*Increased the width*/
+            width: 100%;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            border: 2px solid #fbc02d;
+        }
+
+        .register_page:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Heading */
+        .page-title {
+            font-size: 2.5rem;
+            color: #fbc02d;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: slideInFromTop 1.5s ease-in-out;
+        }
+
+        /* Description */
+        .description {
+            font-size: 1.2rem;
+            color: #f7f7f7;
+            margin-bottom: 30px;
+        }
+
+        /* Form Styles */
+        .form label {
+            display: block;
+            font-size: 1.1rem;
+            color: #fbc02d;
+            margin-bottom: 8px;
+            text-align: left;
+             margin-top: 10px; /* Added margin-top for spacing */
+        }
+
+        .form input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            color: #333;
+        }
+         .form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+            color: #333;
+        }
+
+
+        .form input:focus {
+            border-color: #fbc02d;
+            outline: none;
+            box-shadow: 0 0 5px #fbc02d;
+        }
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Space items on the both sides*/
+
+         }
+
+        .form-left{
+            width: 48%;
+             flex:1; /*Added this for spacing of the form elements */
+             margin-right: 20px;
+         }
+        .form-right{
+            width: 48%;
+            flex:1; /*Added this for spacing of the form elements */
+        }
+
+
+        /* Submit Button */
+        .submit {
+            background-color: #fbc02d;
+            color: black;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease-in-out;
+            box-shadow: 0 8px 15px rgba(251, 192, 45, 0.3);
+        }
+
+        .submit:hover {
+            background-color: #f57f17;
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(245, 127, 23, 0.4);
+        }
+
+        /* Result Text */
+        .result {
+            font-size: 1.2rem;
+            margin-top: 20px;
+            color: #fbc02d;
+            font-weight: 600;
+        }
+        .error {
+            color: #ff5252;
+            margin-top: 10px;
+            font-size: 1.1rem; /* increased font-size and margin */
+            font-weight: bold;
+           margin-bottom: 10px;
+        }
+         .output{
+            margin-top: 20px;
+            padding: 10px;
+            background: #ffffff1a;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .register_page {
+                padding: 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .description {
+                font-size: 1rem;
+            }
+
+            .form input {
+                padding: 10px;
+            }
+
+            .submit {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes slideInFromTop {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="register_page">
+        <div class="form">
+            <h1 class="page-title">Predict Your Dream House</h1>
+            <p class="description">Fill in the details to get an accurate estimate of the house price based on your inputs.</p>
+              <div class="error" id="formError"></div>
+            <form action="{{ url_for('predict') }}" method="POST" id="predictionForm"  >
+              <div class="form-container">
+                <div class="form-left">
+                  <label for="location">Location:</label>
+                   <select name="location" id="location" required>
+                     <option value="">Select location</option>
+                      <option value="Dandeli">Dandeli</option>
+                      <option value="Haliyal">Haliyal</option>
+                      <option value="Dharwad">Dharwad</option>
+                      <option value="Hubli">Hubli</option>
+                     <option value="Belgaum">Belgaum</option>
+                     </select><br>
+                    <label for="bedrooms">Bedrooms:</label>
+                    <input type="number" name="bedrooms" id="bedrooms" placeholder="Enter the number of Bedrooms" step="any" value="{{ bedrooms }}" required><br>
+
+                    <label for="bathrooms">Bathrooms:</label>
+                    <input type="number" name="bathrooms" id="bathrooms" placeholder="Enter the number of Bathrooms" step="any" value="{{ bathrooms }}" required><br>
+
+                     <label for="sqft_living">Living Space (sqft):</label>
+                     <input type="number" name="sqft_living" id="sqft_living" placeholder="Enter living space in sqft" step="any" value="{{ sqft_living }}" required><br>
+
+                      <label for="sqft_lot">Lot Size (sqft):</label>
+                     <input type="number" name="sqft_lot" id="sqft_lot" placeholder="Enter lot size in sqft" step="any" value="{{ sqft_lot }}" required><br>
+                   </div>
+
+                 <div class = "form-right">
+                   <label for="floors">Floors:</label>
+                   <input type="number" name="floors" id="floors" placeholder="Enter the number of Floors" step="any" value="{{ floors }}" required><br>
+
+                   <label for="grade">Grade:</label>
+                  <input type="number" name="grade" id="grade" placeholder="Enter the grade of the house" value="{{ grade }}" required><br>
+
+                   <label for="yr_built">Year of Build:</label>
+                   <input type="number" name="yr_built" id="yr_built" placeholder="Enter the Year of Build" value="{{ yr_built }}" required><br>
+
+                   <label for="yr_renovated">Year Renovated:</label>
+                   <input type="number" name="yr_renovated" id="yr_renovated" placeholder="Enter the Year of Renovation or 0 if no renovations" value="{{ yr_renovated }}" required><br>
+                </div>
+            </div>
+                <input type="submit" value="Predict" class="submit">
+            </form>
+            {% if data %}
+            <div class="output">
+            <p class="result">Predicted House Price: {{ data }}</p>
+                 <p><b>Location:</b> {{ location }}</p>
+                 <p><b>Bedrooms:</b> {{ bedrooms }}</p>
+                <p><b>Bathrooms:</b> {{ bathrooms }}</p>
+                 <p><b>Living Space:</b> {{ sqft_living }}</p>
+                 <p><b>Lot Size:</b> {{ sqft_lot }}</p>
+                 <p><b>Floors:</b> {{ floors }}</p>
+                <p><b>Grade:</b> {{ grade }}</p>
+                 <p><b>Year Built:</b> {{ yr_built }}</p>
+                  <p><b>Year Renovated:</b> {{ yr_renovated }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+      <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            const formError = document.getElementById('formError');
+            const yearBuilt = document.getElementById('yr_built').value;
+            if(yearBuilt > new Date().getFullYear()){
+                event.preventDefault();
+                formError.textContent = "Year of Build cannot be in the future.";
+            }else{
+                formError.textContent = ""; // Clear previous error if the validation is now successful
+            }
+
+          const sqftLiving = document.getElementById('sqft_living').value
+          const sqftLot = document.getElementById('sqft_lot').value
+          if(parseFloat(sqftLot)<=parseFloat(sqftLiving)){
+               event.preventDefault();
+               formError.textContent = "Lot size must be larger than living area.";
+          }
+          const yrRenovated = document.getElementById('yr_renovated').value
+          const yrBuilt = document.getElementById('yr_built').value
+           if(parseFloat(yrRenovated) != 0 && parseFloat(yrRenovated) < parseFloat(yrBuilt)){
+               event.preventDefault();
+              formError.textContent ="Year renovated should not be less than year of built"
+            }
+          
+           const bathrooms = document.getElementById('bathrooms').value
+           const bedrooms = document.getElementById('bedrooms').value;
+
+          if(parseFloat(bathrooms) > parseFloat(bedrooms)){
+              event.preventDefault();
+             formError.textContent = "Bathrooms should not be larger than bedrooms";
+           }
+           if(parseFloat(bedrooms) < 0 ||
+              parseFloat(bathrooms) < 0 ||
+              parseFloat(sqftLiving) < 0 ||
+              parseFloat(sqftLot) < 0 ||
+              parseFloat(grade) < 0||
+              parseFloat(yrBuilt) < 0 ||
+              parseFloat(yrRenovated) < 0 ||
+                parseFloat(floors) < 0
+           ){
+              event.preventDefault();
+               formError.textContent = "All input values must be non negative values.";
+           }
+
+        });
+    </script>
+</body>
+</html>
